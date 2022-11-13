@@ -1,19 +1,14 @@
-# Tracker类，负责跟踪视频文件
 import random
 from Tracker import tracker
 from functools import reduce
 import math
+import EnterpriseResourcePlan
+import Production
 
-
-def sigmoid(x):
-    return 1 / (1 + math.exp(-x))
-
-
-# Tracker实现如下：
 class Tracker(object):
-    def __init__(self, layer_index, node_index):
-        self.layer_index = layer_index
-        self.node_index = node_index
+    def __init__(self, plan, production):
+        self.plan = plan
+        self.production = production
         self.downstream = []
         self.upstream = []
         self.output = 0
@@ -22,23 +17,23 @@ class Tracker(object):
     def set_output(self, output):
         self.output = output
 
-    def append_downstream_connection(self, conn):
-        self.downstream.append(conn)
+    def set_enterprise_resource_plan(self):
+        self.plan.set_enterprise_resource_plan()
 
-    def append_upstream_connection(self, conn):
-        self.upstream.append(conn)
+    def set_plan_schedule(self):
+        self.production.set_plan_schedule(conn)
 
-    def calc_output(self):
+    def process(self):
         output = reduce(lambda ret, conn: ret + conn.upstream_node.output * conn.weight, self.upstream, 0)
         self.output = sigmoid(output)
 
-    def calc_hidden_layer_delta(self):
+    def calc_delta(self):
         downstream_delta = reduce(
             lambda ret, conn: ret + conn.downstream_node.delta * conn.weight,
             self.downstream, 0.0)
         self.delta = self.output * (1 - self.output) * downstream_delta
 
-    def calc_output_layer_delta(self, label):
+    def calc_output_delta(self, label):
         self.delta = self.output * (1 - self.output) * (label - self.output)
 
     def __str__(self):
@@ -47,7 +42,6 @@ class Tracker(object):
         upstream_str = reduce(lambda ret, conn: ret + '\n\t' + str(conn), self.upstream, '')
         return node_str + '\n\tdownstream:' + downstream_str + '\n\tupstream:' + upstream_str
 
-# Connection类。
 class Connection(object):
     def __init__(self, upstream_node, downstream_node):
         self.upstream_node = upstream_node
@@ -73,8 +67,6 @@ class Connection(object):
             self.downstream_node.node_index,
             self.weight)
 
-
-# Connections对象，提供Connection集合操作。
 
 class Connections(object):
     def __init__(self):
