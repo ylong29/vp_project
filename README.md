@@ -1,1 +1,4 @@
-# vp_project
+# Virtual Production
+在Virtual Production component的开发中，我需要将其拆分成Tracker，VPStudio和UE4VirtualProduction三个child component。它们分别负责不同的area，去完成不同的功能，并最终通过Virtual Production component的入口Main.py中的init function和process function整合在一起。
+# Main
+我们需要定义Main class作为整个Virtual Production的入口。首  先需要在init function中定义两个输入文件的file path以及输出文件的file path作为三个传入参数，根据传入参数定义好前文提到的EnterpriseResourcePlan，Production，Tracker，VPStudio和UE4VirtualProduction类，然后在定义的process方法中调用UE4VirtualProduction类中的forward和update function。
