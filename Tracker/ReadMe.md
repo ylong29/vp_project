@@ -1,1 +1,2 @@
 # Tracker 
+在VP模块的功能实现中，我们需要Tracker组件去负责跟踪视频文件。首先，我们需要在init function中将前文提到的EnterpriseResourcePlanclass和Production class作为输入。然后我们需要去定义ini等config文件和uasset, umap等content文件，通过Unreal Engine软件将其build成我们所需要的package。之后在Tracker类中实现process function并在其中去调用 Unreal Engine project 中的config和content的build result，以此完成Tracker模块的相关功能。
